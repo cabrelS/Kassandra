@@ -15,5 +15,7 @@ public class Short
 
     [BsonElement("short")]
     public string ShortM { get; set; } = null!;
+    [BsonElement("pos")]
+    public long Pos { get; set; } = 0 ;
 
 }

@@ -77,3 +77,4 @@ _[Ss]cripts
 # Config Files #
 ################
 appsettings.Development.json
+data.json

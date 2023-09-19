@@ -17,11 +17,15 @@ public class ShortsService
         _shortsCollection = mongoDatabase.GetCollection<Short>(kassandraDatabaseSettings.Value.ShortsCollectionName);
     }
 
-    public async Task<List<Short>> GetAsync() =>
-        await _shortsCollection.Find(_ => true).ToListAsync();
+    public async Task<List<Short>> GetAsync() => await _shortsCollection.Find(_ => true).ToListAsync();
+    public async Task<long> CountAsync(){
+        var filter = Builders<Short>.Filter.Empty;
+        var count =  _shortsCollection.Find(filter).CountDocumentsAsync();
+        return await count;
+    }
+    public async Task<Short?> GetAsync(int pos) => await _shortsCollection.Find(x => x.Pos == pos).FirstOrDefaultAsync();
     
-    public async Task<Short?> GetAsync(string id) =>
-        await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    public async Task<Short?> GetAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
     
 
 }
