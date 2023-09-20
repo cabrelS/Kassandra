@@ -1,9 +1,9 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Kassandra.Models;
+namespace Kassandra.Keys;
 
-public class Short 
+public class Keys
 {
     [BsonId]
     [BsonRepresentation(BsonType.ObjectId)]
@@ -12,9 +12,6 @@ public class Short
     [BsonElement("key")]
     public string Key { get; set; } = null!;
 
-    [BsonElement("short")]
-    public string ShortM { get; set; } = null!;
-    [BsonElement("pos")]
-    public long Pos { get; set; } = 0 ;
-
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string[] Docs { get; set; } = null!;
 }
