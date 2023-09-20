@@ -23,9 +23,18 @@ public class ShortsService
         var count =  _shortsCollection.Find(filter).CountDocumentsAsync();
         return await count;
     }
+    public async Task<List<Short>> GetAsync(string key)
+    {
+        var filter = Builders<Short>.Filter
+        .Eq(x => x.Key, key);
+        
+        var result = await _shortsCollection.Find(filter).ToListAsync();
+        
+        return result;
+    }
     public async Task<Short?> GetAsync(int pos) => await _shortsCollection.Find(x => x.Pos == pos).FirstOrDefaultAsync();
     
-    public async Task<Short?> GetAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+    // public async Task<Short?> GetAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
     
 
 }

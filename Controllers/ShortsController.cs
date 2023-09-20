@@ -30,16 +30,25 @@ public class ShortsController : ControllerBase
         return _short;
     }
     
-    [HttpGet("{id:length(24)}")]
-    public async Task<ActionResult<Short>> Get(string id)
+    [HttpGet("{key}")]
+    public async Task<ActionResult<Short>> Get(string key)
     {
-        var _short = await _shortService.GetAsync(id);
-
-        if (_short is null)
+        var result = await _shortService.GetAsync(key);
+        if (result is null)
         {
             return NotFound();
         }
-        return _short;
+        int count = result.Count();
+        if (count > 1)
+        {
+            Random rand = new Random();
+            int it = rand.Next(0,count);
+            return result[it];
+        }
+        else
+        {
+            return result[0];
+        }
     }
     
     
