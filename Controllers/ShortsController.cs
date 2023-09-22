@@ -16,40 +16,18 @@ public class ShortsController : ControllerBase
     // public async Task<List<Short>> Get() => await _shortService.GetAsync();
 
     [HttpGet]
-    public async Task<ActionResult<Short>> Get()
+    public async Task<ActionResult<Short>> GetAny()
     {
-        var max = await _shortService.CountAsync();
-        Random random = new Random();
-        int rand = random.Next(0, (int)max - 1);
-        var _short = await _shortService.GetAsync(rand);
-        
-        if (_short is null)
-        {
-            return NotFound();
-        }
+        var _short = await _shortService.GetAnyAsync();
+        if (_short is null) return NotFound();
         return _short;
     }
     
     [HttpGet("{key}")]
-    public async Task<ActionResult<Short>> Get(string key)
+    public async Task<ActionResult<Short>> Get(string id)
     {
-        var result = await _shortService.GetAsync(key);
-        if (result is null)
-        {
-            return NotFound();
-        }
-        int count = result.Count();
-        if (count > 1)
-        {
-            Random rand = new Random();
-            int it = rand.Next(0,count);
-            return result[it];
-        }
-        else
-        {
-            return result[0];
-        }
+        var _short = await _shortService.GetAsync(id);
+        if (_short is null) return NotFound();
+        return _short;
     }
-    
-    
 }

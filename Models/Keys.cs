@@ -1,7 +1,7 @@
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
 
-namespace Kassandra.Keys;
+namespace Kassandra.Models;
 
 public class Keys
 {
@@ -13,5 +13,5 @@ public class Keys
     public string Key { get; set; } = null!;
 
     [BsonRepresentation(BsonType.ObjectId)]
-    public string[] Docs { get; set; } = null!;
+    public string[]? Docs { get; set; }
 }
