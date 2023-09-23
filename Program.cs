@@ -9,6 +9,8 @@ builder.Services.Configure<KassandraDatabaseSettings>(
     builder.Configuration.GetSection("KassandraDatabase")
 );
 builder.Services.AddSingleton<ShortsService>();
+builder.Services.AddSingleton<ShortMessagesService>();
+builder.Services.AddSingleton<KeysService>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();

@@ -11,7 +11,8 @@ public class Keys
 
     [BsonElement("key")]
     public string Key { get; set; } = null!;
-
-    [BsonRepresentation(BsonType.ObjectId)]
+    
+    [BsonElement("docs")]
+    // [BsonRepresentation(BsonType.Array)]
     public string[]? Docs { get; set; }
 }

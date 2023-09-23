@@ -21,25 +21,24 @@ public class ShortsService
     }
 
     public async Task<List<Short>> GetAsync() => await _shortsCollection.Find(_ => true).ToListAsync();
-    public async Task<Short> GetAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-    public async Task<Short> GetAnyAsync()
+    public async Task<Short> GetAsync(string _key = "any")
     {
-        var filter = Builders<Short>.Filter.Empty;
-        var _short = new Short();
-        var key = await _keyService.GetAnyAsync();
+        var key = await _keyService.GetAsync(_key);
         if (key is null) { return null!;}
         else{
-            string[]? shortsId = key.Docs;
-            if (shortsId?.Count() > 1)
+            var ids = key.Docs;
+            Short _short;
+            if (ids?.Count() > 1)
             {
                 Random rand = new Random();
-                _short = GetAsync(shortsId?.ElementAt(rand.Next(0, shortsId?.Count() ?? 2)) ?? "6507585a2cadab045f83ecab").Result;
+                _short = GetShortAsync(ids?.ElementAt(rand.Next(0, ids?.Count() ?? 2)) ?? "6507585a2cadab045f83ecab").Result;
             }
             else
             {
-                _short = GetAsync(shortsId?.ElementAt(0) ?? "6507585a2cadab045f83ecab").Result;
+                _short = GetShortAsync(ids?.ElementAt(0) ?? "6507585a2cadab045f83ecab").Result;
             }
             return _short;
         }
     }
+    public async Task<Short> GetShortAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 }

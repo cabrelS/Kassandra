@@ -10,11 +10,9 @@ public class Short
     public string? Id { get; set; }
 
     [BsonElement("key")]
-    public string Key { get; set; } = null!;
+    public string[] Key { get; set; } = null!;
 
     [BsonElement("short")]
-    public string ShortM { get; set; } = null!;
-    [BsonElement("pos")]
-    public long Pos { get; set; } = 0 ;
+    public string[] ShortM { get; set; } = null!;
 
 }
