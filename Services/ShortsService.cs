@@ -7,34 +7,38 @@ namespace Kassandra.Services;
 public class ShortsService
 {
     private readonly IMongoCollection<Short> _shortsCollection;
+    private readonly KeysService _keyService;
 
-    public ShortsService(IOptions<KassandraDatabaseSettings> kassandraDatabaseSettings)
+    public ShortsService(IOptions<KassandraDatabaseSettings> kassandraDatabaseSettings, KeysService keysService)
     {
         var mongoClient = new MongoClient(kassandraDatabaseSettings.Value.ConnectionString);
 
         var mongoDatabase = mongoClient.GetDatabase(kassandraDatabaseSettings.Value.DatabaseName);
 
         _shortsCollection = mongoDatabase.GetCollection<Short>(kassandraDatabaseSettings.Value.ShortsCollectionName);
+
+        _keyService = keysService; 
     }
 
     public async Task<List<Short>> GetAsync() => await _shortsCollection.Find(_ => true).ToListAsync();
-    public async Task<long> CountAsync(){
-        var filter = Builders<Short>.Filter.Empty;
-        var count =  _shortsCollection.Find(filter).CountDocumentsAsync();
-        return await count;
-    }
-    public async Task<List<Short>> GetAsync(string key)
+    public async Task<Short> GetAsync(string _key = "any")
     {
-        var filter = Builders<Short>.Filter
-        .Eq(x => x.Key, key);
-        
-        var result = await _shortsCollection.Find(filter).ToListAsync();
-        
-        return result;
+        var key = await _keyService.GetAsync(_key);
+        if (key is null) { return null!;}
+        else{
+            var ids = key.Docs;
+            Short _short;
+            if (ids?.Count() > 1)
+            {
+                Random rand = new Random();
+                _short = GetShortAsync(ids?.ElementAt(rand.Next(0, ids?.Count() ?? 2)) ?? "6507585a2cadab045f83ecab").Result;
+            }
+            else
+            {
+                _short = GetShortAsync(ids?.ElementAt(0) ?? "6507585a2cadab045f83ecab").Result;
+            }
+            return _short;
+        }
     }
-    public async Task<Short?> GetAsync(int pos) => await _shortsCollection.Find(x => x.Pos == pos).FirstOrDefaultAsync();
-    
-    // public async Task<Short?> GetAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
-    
-
+    public async Task<Short> GetShortAsync(string id) => await _shortsCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
 }
